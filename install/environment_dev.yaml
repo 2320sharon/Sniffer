@@ -1,0 +1,23 @@
+name: doodler-dev
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+ - python
+ - CairoSVG
+ - matplotlib
+ - scipy
+ - numpy
+ - scikit-image
+ - Pillow
+ - scikit-learn
+ - pydensecrf
+ - cairo
+ - tqdm
+ - psutil
+ - jupyterlab
+ - holoviews
+ - panel
+ - flake8
+ - pytest
+ - pytest-cov
