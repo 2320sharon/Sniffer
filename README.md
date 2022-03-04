@@ -26,5 +26,5 @@
 
 ## Installation Guide
 
-1. `conda env create --file install/geotinder.yaml`
-2. `conda activate GeoTinder`
+1. `conda env create --file install/Sniffer.yaml`
+2. `conda activate Sniffer`

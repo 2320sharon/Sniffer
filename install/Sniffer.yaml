@@ -1,4 +1,4 @@
-name: GeoTinder
+name: Sniffer
 channels:
   - conda-forge
   - defaults
