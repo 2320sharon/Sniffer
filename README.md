@@ -1,10 +1,7 @@
 # Sniffer 🐕 
 <img src="https://user-images.githubusercontent.com/61564689/156816270-3e0374b9-bd93-4e46-b195-2f88d10c0b54.gif" align="right"
      alt="Sniffer Logo" width="550" height="400">
-   
-<img src="https://user-images.githubusercontent.com/61564689/156816405-f7f260e3-b020-43fd-8462-023dabcf0b7a.png" align="left"
-     alt="Sniffer Logo" width="420" height="150">
-
+"Sniff out the good and bad imagery in your dataset." 
 - A python application for sorting through geospatial imagery.
 - Only sorts jpgs in the `images` directory
 - Saves the sorted jpgs in a directory called `sorted_images` within the program's directory
