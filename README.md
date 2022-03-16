@@ -1,5 +1,6 @@
 # Sniffer 🐕 
-<img src="https://user-images.githubusercontent.com/61564689/156816270-3e0374b9-bd93-4e46-b195-2f88d10c0b54.gif" align="right"
+
+<img src="https://user-images.githubusercontent.com/61564689/158707744-384f5531-8768-4ad2-b659-a829b5466dd5.gif" align="right"
      alt="Sniffer Logo" width="480" height="400">
 "Sniff out the good and bad imagery in your dataset." 
 - A python application for sorting through geospatial imagery.
