@@ -30,6 +30,5 @@
 2. `conda activate Sniffer`
 
 ## :open_mouth: Updates Coming Soon :open_mouth:
-1. Undo button
-2. Hotkeys
+1. Hotkeys - in development
 3. Hosting :globe_with_meridians: 
