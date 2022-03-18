@@ -1,7 +1,6 @@
 # Sniffer 🐕
-
-<img src="https://user-images.githubusercontent.com/61564689/158707744-384f5531-8768-4ad2-b659-a829b5466dd5.gif" align="right"
-     alt="Sniffer Logo" width="480" height="400">
+<img src="https://user-images.githubusercontent.com/61564689/159071698-5332b923-1e98-4082-95a1-bbf5b04ce318.gif" align="right"
+     alt="Sniffer Logo" width="560" height="450">
 "Sniff out the good and bad imagery in your dataset."
 
 - A python application for sorting through imagery.
