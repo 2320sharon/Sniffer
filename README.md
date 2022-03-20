@@ -30,7 +30,17 @@
 1. `conda env create --file install/Sniffer.yaml`
 2. `conda activate Sniffer`
 
+## Quick Disclaimer
+Currently sniffer only works with images with the `.jpg` extension. Other file types are not supported.
+####  Unsupported File Types
+- :x: `.jpeg` 
+- :x: `.JPG`
+- :x: `.PNG`
+
+
 ## :open_mouth: Updates Coming Soon :open_mouth:
 
 1. Hotkeys - in development
-2. Hosting :globe_with_meridians:
+2. Support for `.png`s
+3. Hosting :globe_with_meridians:
+
