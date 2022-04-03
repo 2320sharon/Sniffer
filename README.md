@@ -1,10 +1,12 @@
-# Sniffer 🐕 
-<img src="https://user-images.githubusercontent.com/61564689/156816270-3e0374b9-bd93-4e46-b195-2f88d10c0b54.gif" align="right"
-     alt="Sniffer Logo" width="480" height="400">
-"Sniff out the good and bad imagery in your dataset." 
-- A python application for sorting through geospatial imagery.
+# Sniffer 🐕
+<img src="https://user-images.githubusercontent.com/61564689/159071698-5332b923-1e98-4082-95a1-bbf5b04ce318.gif" align="right"
+     alt="Sniffer Logo" width="560" height="450">
+"Sniff out the good and bad imagery in your dataset."
+
+- A python application for sorting through imagery.
 - Only sorts jpgs in the `images` directory
-- Saves the sorted jpgs in a directory called `sorted_images` within the program's directory
+- Saves the sorted jpgs in two directories called `good_images` and `bad_images` within the program's directory when `File Mode` is activated
+- Saves the outputs as a csv into the programs current working directory when `CSV Mode` is activated
 
 ## Running the Program :computer:
 
@@ -28,7 +30,17 @@
 1. `conda env create --file install/Sniffer.yaml`
 2. `conda activate Sniffer`
 
+## Quick Disclaimer
+Currently sniffer only works with images with the `.jpg` extension. Other file types are not supported.
+####  Unsupported File Types
+- :x: `.jpeg` 
+- :x: `.JPG`
+- :x: `.PNG`
+
+
 ## :open_mouth: Updates Coming Soon :open_mouth:
-1. Undo button
-2. Hotkeys
-3. Hosting :globe_with_meridians: 
+
+1. Hotkeys - in development
+2. Support for `.png`s
+3. Hosting :globe_with_meridians:
+
