@@ -21,3 +21,4 @@ dependencies:
   - flake8
   - pytest
   - pytest-cov
+  - pynput
