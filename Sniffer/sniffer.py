@@ -16,10 +16,10 @@ class SnifferClass(param.Parameterized):
         
     # Widgets
     thumbnail_button = pn.widgets.Button(name='THUMBNAIL',button_type='success',width=50,margin=(10,20))
-    image_button = pn.widgets.Button(name='IMAGE',width=50,button_type='success',margin=(10,20))
-    yes_button = pn.widgets.Button(name='YES',width=50,button_type='success',margin=(10,20))
-    no_button = pn.widgets.Button(name='NO',width=50,button_type='danger', margin=(10,20))
-    undo_button = pn.widgets.Button(name='UNDO',width=35,button_type='warning', margin=(10,20))
+    image_button = pn.widgets.Button(name='IMAGE',button_type='success',width=50,margin=(10,20))
+    yes_button = pn.widgets.Button(name='YES',button_type='success',width=50,margin=(10,20))
+    no_button = pn.widgets.Button(name='NO',button_type='danger',width=50, margin=(10,20))
+    undo_button = pn.widgets.Button(name='UNDO',button_type='warning',width=35, margin=(10,20))
     # Mode selector
     radio_group = pn.widgets.RadioButtonGroup(
         name='Radio Button Group', options=['CSV Mode', 'File Mode'],margin=(40,1))
@@ -46,7 +46,7 @@ class SnifferClass(param.Parameterized):
         self.thumbnails_dir_loc=os.getcwd()+os.sep+"thumbnails"     
         
         self.last_index_photos_list=len(self.photos_list) -1
-        # inital_photo will be the first image from the user dataset to be display in the jpg panel
+        # initial_photo will be the first image from the user dataset to be display in the jpg panel
         if self.quality_control(self.photos_dir_location,self.photos_list)==False:
             raise FileNotFoundError (f"{self.photos_dir_location} contains no jpgs")
 
@@ -55,10 +55,9 @@ class SnifferClass(param.Parameterized):
         self.text.value="Click THUMBNAIL to create thumbnails for all images or IMAGE to use the original images.\
         \n WARNING: If you choose IMAGE and your images are too large switching images may take longer. "
         
-    def replace_ext(self,old_ext:str, new_ext:str):
-        """ Converts all images of the old ext(short for extension) to the new ext(extension) in the images \
-            directory
-
+    def replace_ext(self,old_ext:str, new_ext:str,images_path=os.getcwd()+os.sep + "images"):
+        """ Converts all images of the old ext(short for extension) to the new ext(extension) in the images_path \
+        
         Args:
             old_ext (str): the old file extension to be replaced
             new_ext (str): the new file extension that replaces the old file extension
@@ -68,8 +67,13 @@ class SnifferClass(param.Parameterized):
                 replaces all files with the .JPG extension with the .jpg extension
 
         """
-        photos_dir_location=os.getcwd()+os.sep + "images"
-        ext_list = glob.glob(photos_dir_location+os.sep+"*"+old_ext)
+        # print(f"images_path: {images_path}")
+        # print(f"type(images_path): {type(images_path)}")
+        searchable_path=str(images_path)+os.sep+"*"+old_ext
+        # print(f"searchable_path: {searchable_path}")
+        # print(f"type(searchable_path): {type(searchable_path)}")
+        # print()
+        ext_list = glob.glob(searchable_path)
         for JPG in ext_list:
             src=JPG
             dest=os.path.splitext(JPG)[:-1]
@@ -428,7 +432,7 @@ class SnifferClass(param.Parameterized):
                     if not quality_control_passed:
                         self.quality_control_failure()
                         self.modify_buttons_state(True)
-                        self.text.value = f'Undo last image #{base.photo_index}'
+                        self.text.value = f'Undo last image #{self.photo_index}'
                     if self.photo_index == 0 or self.photo_index < 0:
                         self.photo_index = 0
                         self.text.value = f'Cannot undo image. None Left'
@@ -472,7 +476,7 @@ class SnifferClass(param.Parameterized):
                 if not quality_control_passed:
                     self.quality_control_failure()
                     self.modify_buttons_state(True)
-                    self.text.value = f'Undo last image #{base.photo_index} / {self.last_index_photos_list}'
+                    self.text.value = f'Undo last image #{self.photo_index} / {self.last_index_photos_list}'
                 if self.photo_index == 0 or self.photo_index < 0:
                     self.photo_index = 0
                     self.text.value = f'Cannot undo image. None Left'
