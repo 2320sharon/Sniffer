@@ -56,4 +56,5 @@ Currently sniffer only works with images with the `.jpg` extension. Other file t
 1. Support for `.png`s
 2. Support for `.jpeg`s
 3. Hosting :globe_with_meridians:
+4. A wiki full of examples and troubleshooting tips
 
