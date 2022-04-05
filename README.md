@@ -1,5 +1,6 @@
 # Sniffer 🐕
 
+![example workflow](https://github.com/2320sharon/Sniffer/actions/workflows/sniffer-action.yml/badge.svg)
 
 <img src="https://user-images.githubusercontent.com/61564689/161645555-2b59559a-68a8-47dc-b11c-24f4e9a244f6.gif" align="right"
      alt="Sniffer Logo" width="560" height="450">
