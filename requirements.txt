@@ -1,0 +1,16 @@
+matplotlib
+scipy
+numpy
+scikit-image
+Pillow
+scikit-learn
+cairo
+tqdm
+pynput
+psutil
+jupyterlab
+holoviews
+panel
+flake8
+pytest
+pytest-cov
