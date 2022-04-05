@@ -1,6 +1,10 @@
 # Sniffer 🐕
 
-![example workflow](https://github.com/2320sharon/Sniffer/actions/workflows/sniffer-action.yml/badge.svg)
+
+[![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
+[![Python 3.7](https://img.shields.io/badge/python-3.7-red.svg)](https://www.python.org/downloads/release/python-370/)
+<br>
+![Action Badge](https://github.com/2320sharon/Sniffer/actions/workflows/sniffer-action.yml/badge.svg)
 
 <img src="https://user-images.githubusercontent.com/61564689/161645555-2b59559a-68a8-47dc-b11c-24f4e9a244f6.gif" align="right"
      alt="Sniffer Logo" width="560" height="450">
