@@ -33,6 +33,26 @@ def test_sniffer_initial_button_state():
    assert sniffer_app.no_button.disabled ==True 
    assert sniffer_app.undo_button.disabled ==True 
 
+def test_quality_control_failure():
+   sniffer_app = sniffer.SnifferClass()
+   # When sniffer starts yes,no and undo are disabled enable them and verify they are disabled by quality_control_failure()
+   sniffer_app.yes_button.disabled = False
+   sniffer_app.no_button.disabled = False 
+   sniffer_app.undo_button.disabled = False 
+   sniffer_app.quality_control_failure()
+   assert sniffer_app.yes_button.disabled ==True
+   assert sniffer_app.no_button.disabled ==True 
+   assert sniffer_app.undo_button.disabled ==True
+
+def test_handle_all_images_processed():
+   # Enable yes and no buttons and verify they are disabled by handle_all_images_processed()
+   sniffer_app = sniffer.SnifferClass()
+   sniffer_app.yes_button.disabled = False
+   sniffer_app.no_button.disabled = False 
+   sniffer_app.handle_all_images_processed()
+   assert sniffer_app.yes_button.disabled ==True
+   assert sniffer_app.no_button.disabled ==True 
+
 def test_modify_buttons_state():
    # yes, no and undo buttons should be enabled when False is passed modify_buttons_state
    sniffer_app = sniffer.SnifferClass() 
