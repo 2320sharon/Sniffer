@@ -74,8 +74,6 @@ def test_delete_image(get_temp_bad_images_dir,get_temp_good_images_dir):
       assert not os.path.exists(deleted_file_loc)
       
        
-
-
 def test_replace_ext(get_temp_images_dir):
     # Verify the extensions .JPG .jpeg get replaced by jpg
     sniffer_app = sniffer.SnifferClass()
@@ -94,6 +92,44 @@ def test_sniffer_initial_button_state():
     assert sniffer_app.no_button.disabled
     assert sniffer_app.undo_button.disabled
 
+
+def test_quality_control_bad_directory():
+   sniffer_app = sniffer.SnifferClass()
+   # Verify quality_control returns False when a directory that doesn't exist is given
+   result=sniffer_app.quality_control("fakedir",[],sniffer_app.bad_images_path,sniffer_app.good_images_path)
+   assert result == False
+
+# def test_quality_control_missing_directories(get_temp_images_dir):
+#    sniffer_app = sniffer.SnifferClass()
+#    # Verify quality_control creates good and bad directories when they don't exist
+#    good_path=os.getcwd() + os.sep + "testing"+os.sep+"good"
+#    bad_path=os.getcwd()+ os.sep+"testing"+os.sep+"good"
+#    print(good_path)
+#    print(type(good_path))
+#    # good_path=str(good_path)
+#    # bad_path=str(bad_path)
+#    result=sniffer_app.quality_control(get_temp_images_dir,[4,5],bad_path,good_path)
+#    assert os.path.exists(good_path)
+#    assert os.path.exists(bad_path)
+#    assert result ==True
+#    # Remove the directories once we are done testing
+#    if os.path.exists(good_path):
+#           os.rmdir(good_path)
+#    if os.path.exists(bad_path):
+#           os.rmdir(bad_path)
+          
+def test_quality_control_empty_photos_list(get_temp_images_dir,get_temp_bad_images_dir,get_temp_good_images_dir):
+   sniffer_app = sniffer.SnifferClass()
+   # Verify quality_control returns False when an empty photos list is given
+   result=sniffer_app.quality_control(get_temp_images_dir,[],get_temp_bad_images_dir,get_temp_good_images_dir)
+   assert result ==False
+
+def test_quality_control_valid_inputs(get_temp_images_dir,get_temp_bad_images_dir,get_temp_good_images_dir):
+   sniffer_app = sniffer.SnifferClass()
+   # Verify quality_control returns true for valid inputs
+   result=sniffer_app.quality_control(get_temp_images_dir,[5,4],get_temp_bad_images_dir,get_temp_good_images_dir)
+   assert result ==True
+       
 
 def test_quality_control_failure():
     # When sniffer starts yes,no and undo are disabled, enable them, and

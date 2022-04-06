@@ -44,12 +44,16 @@ class SnifferClass(param.Parameterized):
         self.thumbnails_dir_loc = os.getcwd() + os.sep + "thumbnails"
 
         self.last_index_photos_list = len(self.photos_list) - 1
+        self.good_images_path = os.getcwd() + os.sep + "good_images"
+        self.bad_images_path = os.getcwd() + os.sep + "bad_images"
         # initial_photo will be the first image from the user dataset to be display in the jpg panel
-        if self.quality_control(self.photos_dir_location, self.photos_list) == False:
+        if self.quality_control(
+                self.photos_dir_location,
+                self.photos_list,
+                self.bad_images_path,
+                self.good_images_path) == False:
             raise FileNotFoundError(f"{self.photos_dir_location} contains no jpgs")
 
-        self.good_images_path= os.getcwd() + os.sep + "good_images"
-        self.bad_images_path= os.getcwd() + os.sep + "bad_images"
         # Disable all buttons except thumbnail and image buttons
         self.modify_buttons_state(True)
         self.text.value = "Click THUMBNAIL to create thumbnails for all images or IMAGE to use the original images.\
@@ -177,7 +181,7 @@ class SnifferClass(param.Parameterized):
         self.modify_buttons_state(True)
         self.text.value = f"ERROR: There are no images in\n{self.photos_dir_location}"
 
-    def quality_control(self, photos_dir_location: str, photos_list: list):
+    def quality_control(self, photos_dir_location: str, photos_list: list, bad_images_path: str, good_images_path: str):
         """Checks if the photos_dir_location exists and that it contains .jpgs. Returns false if either check fails
 
         Args:
@@ -189,20 +193,17 @@ class SnifferClass(param.Parameterized):
             False: photos_dir_location contained files other than .jpgs
         """
         if not os.path.isdir(photos_dir_location):
-            os.mkdir(photos_dir_location)
             return False
-        bad_images_path = os.getcwd() + os.sep + "bad_images"
-        good_images_path = os.getcwd() + os.sep + "good_images"
-        if not os.path.exists(bad_images_path):
+        if not os.path.exists(self.bad_images_path):
             os.mkdir(bad_images_path)
-        if not os.path.exists(good_images_path):
+        if not os.path.exists(self.good_images_path):
             os.mkdir(good_images_path)
         if len(photos_list) == 0:
             return False
     #         If neither of these return false it means quality control passed
         return True
 
-    def create_csv(self,csv_path:str = os.getcwd(),csv_filename :str = None):
+    def create_csv(self, csv_path: str = os.getcwd(), csv_filename: str = None):
         """ Creates a CSV file in the location in csv_path called csv_filename if is given or Sniffer_Output_{current time}.csv.
         Args:
             csv_filename (str): name of the csv file generated instead of the default name Sniffer_Output_{current time}.csv
@@ -213,11 +214,11 @@ class SnifferClass(param.Parameterized):
             str: Path to the csv file in the current working directory
         """
         today = datetime.now()
-        if csv_filename != None:
+        if csv_filename is not None:
             if not csv_filename.endswith(".csv"):
                 csv_filename += ".csv"
             csv_path = csv_path + os.sep + csv_filename
-        elif csv_filename == None:
+        elif csv_filename is None:
             d1 = today.strftime("%d_%m_%Y_hr_%H_%M")
             filename = f"Sniffer_Output_" + d1 + ".csv"
             csv_path = csv_path + os.sep + filename
@@ -294,7 +295,11 @@ class SnifferClass(param.Parameterized):
             -"good": sort the image as a good image
             -"bad": sort the image as a bad image
         """
-        quality_control_passed = self.quality_control(self.photos_dir_location, self.photos_list)
+        quality_control_passed = self.quality_control(
+            self.photos_dir_location,
+            self.photos_list,
+            self.bad_images_path,
+            self.good_images_path)
         if not quality_control_passed:
             self.quality_control_failure()
         elif quality_control_passed:
@@ -419,7 +424,8 @@ class SnifferClass(param.Parameterized):
     def undo_hotkey(self):
         if not self.photo_index < 0:
             if(self.radio_group.value == "File Mode"):
-                quality_control_passed = self.quality_control(self.photos_dir_location, self.photos_list)
+                quality_control_passed = self.quality_control(
+                    self.photos_dir_location, self.photos_list, self.bad_images_path, self.good_images_path)
                 if not quality_control_passed:
                     self.quality_control_failure()
                     self.modify_buttons_state(True)
@@ -435,7 +441,7 @@ class SnifferClass(param.Parameterized):
                     self.photo_index -= 1
                     self.text.value = f'Undo last image: {self.photos_list[self.photo_index]} index: {self.photo_index}'
                     # Delete the old file from good or bad directory
-                    self.delete_image(self.photos_list[self.photo_index],self.bad_images_path,self.good_images_path)
+                    self.delete_image(self.photos_list[self.photo_index], self.bad_images_path, self.good_images_path)
                     # Update the jpg panel
                     new_photo = self.photos_dir_location + os.sep + self.photos_list[self.photo_index]
                     self.jpg_panel.object = new_photo
