@@ -13,6 +13,22 @@ def test_change_filename():
     assert new_filename_loc == sorted_dir+os.sep+"old_filename_good.jpg"
 
 
+def test_create_csv(get_temp_dir):
+      # Verify that create_csv will create a csv when a csv_filename is given
+      sniffer_app = sniffer.SnifferClass()
+      csv_filename="test.csv"
+      result_path=sniffer_app.create_csv(csv_path=get_temp_dir,csv_filename="test.csv")
+      expected_path = get_temp_dir+os.sep+csv_filename
+      assert expected_path == result_path 
+      
+def test_create_csv_without_name(get_temp_dir):
+      # Verify that create_csv will create a csv when a csv_filename is not given
+      sniffer_app = sniffer.SnifferClass()
+      result_path=sniffer_app.create_csv(csv_path=get_temp_dir)
+      assert os.path.exists(result_path) 
+       
+       
+
 def test_replace_ext(get_temp_images_dir):
    # Verify the extensions .JPG .jpeg get replaced by jpg 
     sniffer_app = sniffer.SnifferClass()  
@@ -33,7 +49,7 @@ def test_sniffer_initial_button_state():
    assert sniffer_app.undo_button.disabled ==True 
 
 
-def test_quality_control_failure():\
+def test_quality_control_failure():
    # When sniffer starts yes,no and undo are disabled, enable them, and verify they are disabled by quality_control_failure()
    sniffer_app = sniffer.SnifferClass()
    sniffer_app.yes_button.disabled = False
