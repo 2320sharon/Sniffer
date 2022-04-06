@@ -3,9 +3,8 @@ import glob
 import os
 from Sniffer import sniffer
 
-
 def test_change_filename():
-   # Make an instance of the Sniffer Class   
+   # Verify change_filename appends _good to the filename
     sniffer_app = sniffer.SnifferClass()
     sorted_dir=os.getcwd()+os.sep+"test_dir"
     old_filename="old_filename.jpg"
@@ -15,8 +14,7 @@ def test_change_filename():
 
 
 def test_replace_ext(get_temp_images_dir):
-   # Make an instance of the Sniffer Class 
-    print(get_temp_images_dir)
+   # Verify the extensions .JPG .jpeg get replaced by jpg 
     sniffer_app = sniffer.SnifferClass()  
     old_ext=["JPG","jpeg"]
     new_ext=".jpg"
@@ -26,16 +24,18 @@ def test_replace_ext(get_temp_images_dir):
            if os.path.splitext(file)[1] != ".png":
                assert  os.path.splitext(file)[1] == ".jpg"
 
+
 def test_sniffer_initial_button_state():
-   # yes, no and undo buttons should be disabled when Sniffer starts
+   # Verify yes, no and undo buttons should be disabled when Sniffer starts
    sniffer_app = sniffer.SnifferClass() 
    assert sniffer_app.yes_button.disabled ==True
    assert sniffer_app.no_button.disabled ==True 
    assert sniffer_app.undo_button.disabled ==True 
 
-def test_quality_control_failure():
+
+def test_quality_control_failure():\
+   # When sniffer starts yes,no and undo are disabled, enable them, and verify they are disabled by quality_control_failure()
    sniffer_app = sniffer.SnifferClass()
-   # When sniffer starts yes,no and undo are disabled enable them and verify they are disabled by quality_control_failure()
    sniffer_app.yes_button.disabled = False
    sniffer_app.no_button.disabled = False 
    sniffer_app.undo_button.disabled = False 
@@ -43,6 +43,7 @@ def test_quality_control_failure():
    assert sniffer_app.yes_button.disabled ==True
    assert sniffer_app.no_button.disabled ==True 
    assert sniffer_app.undo_button.disabled ==True
+
 
 def test_handle_all_images_processed():
    # Enable yes and no buttons and verify they are disabled by handle_all_images_processed()
@@ -52,6 +53,14 @@ def test_handle_all_images_processed():
    sniffer_app.handle_all_images_processed()
    assert sniffer_app.yes_button.disabled ==True
    assert sniffer_app.no_button.disabled ==True 
+
+
+def test_get_photo_index_text():
+   # get_photo_index_text() returns StaticText access the value and verify it == photo index
+   sniffer_app = sniffer.SnifferClass()
+   sniffer_app.photo_index=2
+   assert   sniffer_app.get_photo_index_text().value=="Current Index: # 2"
+
 
 def test_modify_buttons_state():
    # yes, no and undo buttons should be enabled when False is passed modify_buttons_state
