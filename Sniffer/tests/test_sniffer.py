@@ -25,3 +25,19 @@ def test_replace_ext(get_temp_images_dir):
            print(f"os.path.splitext(file)[1]: {os.path.splitext(file)[1]}")
            if os.path.splitext(file)[1] != ".png":
                assert  os.path.splitext(file)[1] == ".jpg"
+
+def test_sniffer_initial_button_state():
+   # yes, no and undo buttons should be disabled when Sniffer starts
+   sniffer_app = sniffer.SnifferClass() 
+   assert sniffer_app.yes_button.disabled ==True
+   assert sniffer_app.no_button.disabled ==True 
+   assert sniffer_app.undo_button.disabled ==True 
+
+def test_modify_buttons_state():
+   # yes, no and undo buttons should be enabled when False is passed modify_buttons_state
+   sniffer_app = sniffer.SnifferClass() 
+   sniffer_app.modify_buttons_state(False)
+   assert sniffer_app.yes_button.disabled == False
+   assert sniffer_app.no_button.disabled == False 
+   assert sniffer_app.undo_button.disabled == False 
+

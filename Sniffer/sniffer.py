@@ -10,7 +10,6 @@ import param
 import holoviews as hv
 
 
-
 class SnifferClass(param.Parameterized):
     photo_index                 = param.Integer(0)
         
