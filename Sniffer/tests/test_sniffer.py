@@ -54,9 +54,26 @@ def test_find_image(get_temp_images_dir):
     # Verify that find_image will not raise an error when the file_path doesn't exist
     sniffer_app.find_image("fakedir", "fake")
     # Verify that find_image will return the correct location when the image does exist
-    expected_output = get_temp_images_dir + os.sep + "img1.jpg"
-    result = sniffer_app.find_image(get_temp_images_dir, "img1.jpg")
+    expected_output = get_temp_images_dir + os.sep + "img1.JPG"
+    result = sniffer_app.find_image(get_temp_images_dir, "img1.JPG")
     assert expected_output == result
+    
+
+def test_delete_image(get_temp_bad_images_dir,get_temp_good_images_dir):
+      sniffer_app = sniffer.SnifferClass()
+      # Verify delete_image won't raise an error when an invalid file is given
+      sniffer_app.delete_image("invalid.jpg",get_temp_bad_images_dir,get_temp_good_images_dir)
+      
+      # Verify delete_image deletes a img2.jpg from the good_images directory
+      sniffer_app.delete_image("img2.jpg",get_temp_bad_images_dir,get_temp_good_images_dir)
+      deleted_file_loc=get_temp_good_images_dir+os.sep+"img2.jpg"
+      
+      # Verify delete_image deletes a img1.jpg from the bad_images directory
+      sniffer_app.delete_image("img1.jpg",get_temp_bad_images_dir,get_temp_good_images_dir)
+      deleted_file_loc=get_temp_good_images_dir+os.sep+"img1.jpg"
+      assert not os.path.exists(deleted_file_loc)
+      
+       
 
 
 def test_replace_ext(get_temp_images_dir):
@@ -66,7 +83,6 @@ def test_replace_ext(get_temp_images_dir):
     new_ext = ".jpg"
     sniffer_app.replace_ext(old_ext, new_ext, images_path=get_temp_images_dir)
     for file in os.listdir(get_temp_images_dir):
-        print(f"os.path.splitext(file)[1]: {os.path.splitext(file)[1]}")
         if os.path.splitext(file)[1] != ".png":
             assert os.path.splitext(file)[1] == ".jpg"
 

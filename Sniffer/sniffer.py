@@ -48,6 +48,8 @@ class SnifferClass(param.Parameterized):
         if self.quality_control(self.photos_dir_location, self.photos_list) == False:
             raise FileNotFoundError(f"{self.photos_dir_location} contains no jpgs")
 
+        self.good_images_path= os.getcwd() + os.sep + "good_images"
+        self.bad_images_path= os.getcwd() + os.sep + "bad_images"
         # Disable all buttons except thumbnail and image buttons
         self.modify_buttons_state(True)
         self.text.value = "Click THUMBNAIL to create thumbnails for all images or IMAGE to use the original images.\
@@ -68,8 +70,6 @@ class SnifferClass(param.Parameterized):
         ext_list = []
         for ext in old_exts:
             searchable_path = str(images_path) + os.sep + "*." + ext
-            print(f"searchable_path: {searchable_path}")
-            print(f"type(searchable_path): {type(searchable_path)}")
             ext_list.extend(glob.glob(searchable_path))
         for JPG in ext_list:
             src = JPG
@@ -239,11 +239,9 @@ class SnifferClass(param.Parameterized):
         # Create a new csv file
         df.to_csv(csv_file, index=False)
 
-    def delete_image(self, filename: str):
+    def delete_image(self, filename: str, bad_images_path: str, good_images_path: str):
         """Deletes the file called filename from either the good_images or bad_images directory"""
-        bad_images_path = os.getcwd() + os.sep + "bad_images"
-        good_images_path = os.getcwd() + os.sep + "good_images"
-        locations = [bad_images_path, good_images_path]
+        locations = [str(bad_images_path), str(good_images_path)]
         # Check if the file exists in either of the directories
         for location in locations:
             image_location = self.find_image(location, filename)
@@ -437,7 +435,7 @@ class SnifferClass(param.Parameterized):
                     self.photo_index -= 1
                     self.text.value = f'Undo last image: {self.photos_list[self.photo_index]} index: {self.photo_index}'
                     # Delete the old file from good or bad directory
-                    self.delete_image(self.photos_list[self.photo_index])
+                    self.delete_image(self.photos_list[self.photo_index],self.bad_images_path,self.good_images_path)
                     # Update the jpg panel
                     new_photo = self.photos_dir_location + os.sep + self.photos_list[self.photo_index]
                     self.jpg_panel.object = new_photo
