@@ -134,12 +134,37 @@ def test_modify_buttons_state():
     assert sniffer_app.undo_button.disabled == False
     
 def test_get_jpg_panel():
-       
+   # @TODO need to test when 0<= photo_index <= last_index
    sniffer_app = sniffer.SnifferClass()
    # Verify sniffer displays loading image when its loaded (index=-1)
    sniffer_app.photo_index = -1
    result_jpg_panel=sniffer_app.get_jpg_panel()
    loading_jpg = os.getcwd() + os.sep + "assets" + os.sep + "new_loading_sniffer.jpg"
    assert result_jpg_panel.object == loading_jpg
-   # sniffer_app.photo_index = -2
+   # Verify sniffer displays loading animation when index=-2
+   sniffer_app.photo_index = -2
+   result_jpg_panel=sniffer_app.get_jpg_panel()
+   assert result_jpg_panel.loading == True
+   # Verify sniffer displays loading animation when index > last index
+   sniffer_app.photo_index = sniffer_app.last_index_photos_list +5
+   last_jpg = os.getcwd() + os.sep + "assets" + os.sep + "new_sniffer_done.jpg"
+   result_jpg_panel=sniffer_app.get_jpg_panel()
+   assert result_jpg_panel.object == last_jpg
    
+def test_get_progress_bar():
+   sniffer_app = sniffer.SnifferClass()
+   # Verify progress bar's value =0 when sniffer loads (index =-1)
+   sniffer_app.photo_index = -1
+   result_progress_bar=sniffer_app.get_progress_bar()
+   assert result_progress_bar.value == 0
+   # Verify progress bar's value = index  when index <= last index
+   sniffer_app.photo_index = 0
+   result_progress_bar=sniffer_app.get_progress_bar()
+   assert result_progress_bar.value == 0
+   sniffer_app.photo_index = 1
+   result_progress_bar=sniffer_app.get_progress_bar()
+   assert result_progress_bar.value == 1
+   # Verify progress bar's value = last_index_photos_list when index > last index
+   sniffer_app.photo_index = sniffer_app.last_index_photos_list +5
+   result_progress_bar=sniffer_app.get_progress_bar()
+   assert result_progress_bar.value == sniffer_app.last_index_photos_list

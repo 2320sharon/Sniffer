@@ -133,8 +133,8 @@ class SnifferClass(param.Parameterized):
 
             self.jpg_panel.object = new_photo
         elif self.photo_index > self.last_index_photos_list:
-            last_photo = os.getcwd() + os.sep + "assets" + os.sep + "new_sniffer_done.jpg"
-            self.jpg_panel.object = last_photo
+            last_jpg = os.getcwd() + os.sep + "assets" + os.sep + "new_sniffer_done.jpg"
+            self.jpg_panel.object = last_jpg
         return self.jpg_panel
 
     def get_photo_index_text(self):
