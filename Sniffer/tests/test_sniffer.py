@@ -132,3 +132,14 @@ def test_modify_buttons_state():
     assert sniffer_app.yes_button.disabled == False
     assert sniffer_app.no_button.disabled == False
     assert sniffer_app.undo_button.disabled == False
+    
+def test_get_jpg_panel():
+       
+   sniffer_app = sniffer.SnifferClass()
+   # Verify sniffer displays loading image when its loaded (index=-1)
+   sniffer_app.photo_index = -1
+   result_jpg_panel=sniffer_app.get_jpg_panel()
+   loading_jpg = os.getcwd() + os.sep + "assets" + os.sep + "new_loading_sniffer.jpg"
+   assert result_jpg_panel.object == loading_jpg
+   # sniffer_app.photo_index = -2
+   
