@@ -226,7 +226,7 @@ class SnifferClass(param.Parameterized):
             writer.writerow(["Filename", "Sorted", "index"])
         return csv_path
 
-    def delete_image_from_csv(self, filename: str, csv_file: str):
+    def delete_filename_from_csv(self, filename: str, csv_file: str):
         """Removes the filename from the csv file"""
         if not os.path.exists(csv_file):
             return
@@ -252,7 +252,7 @@ class SnifferClass(param.Parameterized):
                 return  # If the file cannot be found then it proceeds normally
 
     def find_image(self, file_path: str, filename: str) -> str:
-        """Looks for the filename (without the extension) in the file_path and returns the location of the file.Otherwise it returns None """
+        """Looks for the filename in the file_path and returns the location of the file.Otherwise it returns None """
         # Remove the extension from the filename
         filename = os.path.splitext(filename)[0]
         # Check if the directory already exists if it doesn't then don't search it
@@ -455,7 +455,7 @@ class SnifferClass(param.Parameterized):
                     self.photo_index -= 1
                     self.text.value = f'Undo last image: {self.photos_list[self.photo_index]} index: {self.photo_index}'
                     # Delete the old file from csv
-                    self.delete_image_from_csv(self.photos_list[self.photo_index], self.csv_file_location)
+                    self.delete_filename_from_csv(self.photos_list[self.photo_index], self.csv_file_location)
                     # Update the jpg panel
                     new_photo = self.photos_dir_location + os.sep + self.photos_list[self.photo_index]
                     self.jpg_panel.object = new_photo
@@ -498,7 +498,7 @@ class SnifferClass(param.Parameterized):
                 self.photo_index -= 1
                 self.text.value = f'Undo last image: {self.photos_list[self.photo_index]} index: {self.photo_index}'
                 # Delete the old file from csv
-                self.delete_image_from_csv(self.photos_list[self.photo_index], self.csv_file_location)
+                self.delete_filename_from_csv(self.photos_list[self.photo_index], self.csv_file_location)
                 # Update the jpg panel
                 new_photo = self.photos_dir_location + os.sep + self.photos_list[self.photo_index]
                 self.jpg_panel.object = new_photo

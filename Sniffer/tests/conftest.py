@@ -1,5 +1,7 @@
 import pytest
 import shutil
+import csv
+import pandas as pd
 import os
 
 
@@ -20,3 +22,25 @@ def get_temp_images_dir(tmpdir_factory):
 def get_temp_dir(tmpdir_factory):
     temp_dir = tmpdir_factory.mktemp("csv")
     return temp_dir
+
+@pytest.fixture(scope="session")
+def get_temp_csv(tmpdir_factory):
+    # dataframe = pd.DataFrame()
+    temp_dir = tmpdir_factory.mktemp("csv").join("data.csv")
+    with open(temp_dir, 'w', newline='') as outcsv:
+            writer = csv.writer(outcsv)
+            writer.writerow(["Filename", "Sorted", "index"])
+            writer.writerow(["testfile.jpg", "good", "0"])
+            writer.writerow(["testfile2.jpg", "bad", "1"])
+    # dataframe.to_csv(temp_dir)
+    return temp_dir
+
+# @pytest.fixture(scope='session')
+# def csv_file(tmpdir_factory):
+#     N = 10
+#     index = range(N)
+#     even = [(n % 2 == 0) for n in range(N)]
+#     dataframe = pd.DataFrame({'even': even}, index=index) 
+#     filename = str(tmpdir_factory.mktemp('data').join('data.csv'))
+#     dataframe.to_csv(filename)
+#     return filename
