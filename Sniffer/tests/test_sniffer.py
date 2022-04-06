@@ -15,12 +15,13 @@ def test_change_filename():
 
 
 def test_replace_ext(get_temp_images_dir):
-       # Make an instance of the Sniffer Class 
+   # Make an instance of the Sniffer Class 
     print(get_temp_images_dir)
     sniffer_app = sniffer.SnifferClass()  
-    old_ext=".JPG"
+    old_ext=["JPG","jpeg"]
     new_ext=".jpg"
     sniffer_app.replace_ext(old_ext,new_ext,images_path=get_temp_images_dir)
     for file in os.listdir(get_temp_images_dir):
            print(f"os.path.splitext(file)[1]: {os.path.splitext(file)[1]}")
-           assert  os.path.splitext(file)[1] == ".jpg"
+           if os.path.splitext(file)[1] != ".png":
+               assert  os.path.splitext(file)[1] == ".jpg"

@@ -36,8 +36,8 @@ class SnifferClass(param.Parameterized):
         # Variables for images
         self.csv_file_location=""
         self.photos_dir_location=os.getcwd()+os.sep + "images"
-        #fix issues with the file extensions by converting to lowercase jpg
-        self.replace_ext(".JPG",".jpg")
+        #fix issues with the file extensions by converting to lowercase .jpg
+        self.replace_ext(["JPG","jpeg"],".jpg")
         jpg_list = glob.glob(self.photos_dir_location+os.sep+"*jpg")
         # photos_list contains the jpgs in the images directory
         self.photos_list=map(lambda x:os.path.basename(x),jpg_list )
@@ -55,7 +55,7 @@ class SnifferClass(param.Parameterized):
         self.text.value="Click THUMBNAIL to create thumbnails for all images or IMAGE to use the original images.\
         \n WARNING: If you choose IMAGE and your images are too large switching images may take longer. "
         
-    def replace_ext(self,old_ext:str, new_ext:str,images_path=os.getcwd()+os.sep + "images"):
+    def replace_ext(self,old_exts:list, new_ext:str,images_path=os.getcwd()+os.sep + "images"):
         """ Converts all images of the old ext(short for extension) to the new ext(extension) in the images_path \
         
         Args:
@@ -67,13 +67,12 @@ class SnifferClass(param.Parameterized):
                 replaces all files with the .JPG extension with the .jpg extension
 
         """
-        # print(f"images_path: {images_path}")
-        # print(f"type(images_path): {type(images_path)}")
-        searchable_path=str(images_path)+os.sep+"*"+old_ext
-        # print(f"searchable_path: {searchable_path}")
-        # print(f"type(searchable_path): {type(searchable_path)}")
-        # print()
-        ext_list = glob.glob(searchable_path)
+        ext_list = []
+        for ext in old_exts:
+            searchable_path=str(images_path)+os.sep+"*."+ext
+            print(f"searchable_path: {searchable_path}")
+            print(f"type(searchable_path): {type(searchable_path)}")
+            ext_list.extend(glob.glob(searchable_path))
         for JPG in ext_list:
             src=JPG
             dest=os.path.splitext(JPG)[:-1]
