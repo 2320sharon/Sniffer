@@ -1,9 +1,6 @@
 matplotlib
-scipy
-numpy
 scikit-image
 Pillow
-tqdm
 pynput
 psutil
 jupyterlab
