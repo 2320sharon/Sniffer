@@ -1,19 +1,18 @@
-name: Sniffer
+name: sniffer
 channels:
   - conda-forge
   - defaults
 dependencies:
-  - python
-  - CairoSVG
+  - python=3.8
   - matplotlib
-  - scipy
-  - numpy
+  - bokeh
+  - jupyter_bokeh
+  # - scipy
+  - pandas
   - scikit-image
   - Pillow
-  - scikit-learn
-  - pydensecrf
-  - cairo
-  - tqdm
+  - jupyter_bokeh
+  # - cairo
   - psutil
   - jupyterlab
   - holoviews
