@@ -467,7 +467,7 @@ def test_modify_buttons_state():
     assert sniffer_app.no_button.disabled == False
     assert sniffer_app.undo_button.disabled == False
     
-def test_get_jpg_panel():
+def test_get_jpg_panel(get_temp_populated_images_dir):
    # @TODO need to test when 0<= image_index <= last_index
    sniffer_app = sniffer.SnifferClass()
    # Verify sniffer displays loading image when its loaded (index=-1)
@@ -484,6 +484,27 @@ def test_get_jpg_panel():
    last_jpg = os.getcwd() + os.sep + "assets" + os.sep + "new_sniffer_done.jpg"
    result_jpg_panel=sniffer_app.get_jpg_panel()
    assert result_jpg_panel.object == last_jpg
+   # Verify sniffer displays image[0] when index = 0
+   sniffer_app.images_list=glob.glob1(get_temp_populated_images_dir + os.sep, "*jpg")
+   initial_index=0
+   sniffer_app.image_index=initial_index
+   result_jpg_panel=sniffer_app.get_jpg_panel()
+   new_jpg_name=sniffer_app.images_list[initial_index]
+   print(f"new_jpg_name: {new_jpg_name}")
+   expected_photo_loc=sniffer_app.images_path+ os.sep + new_jpg_name
+   print(f"expected_photo_loc: {expected_photo_loc}")
+   assert result_jpg_panel.object == expected_photo_loc
+   # Verify sniffer displays last image when index = last_index
+   sniffer_app.images_list=glob.glob1(get_temp_populated_images_dir + os.sep, "*jpg")
+   sniffer_app.last_index_images_list=len(sniffer_app.images_list)-1
+   initial_index=sniffer_app.last_index_images_list
+   sniffer_app.image_index=sniffer_app.last_index_images_list
+   result_jpg_panel=sniffer_app.get_jpg_panel()
+   new_jpg_name=sniffer_app.images_list[initial_index]
+   print(f"new_jpg_name: {new_jpg_name}")
+   expected_photo_loc=sniffer_app.images_path+ os.sep + new_jpg_name
+   print(f"expected_photo_loc: {expected_photo_loc}")
+   assert result_jpg_panel.object == expected_photo_loc
    
 def test_get_progress_bar():
    sniffer_app = sniffer.SnifferClass()
