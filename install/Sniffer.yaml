@@ -4,6 +4,8 @@ channels:
   - defaults
 dependencies:
   - python
+  - bokeh
+  - jupyter_bokeh
   - CairoSVG
   - matplotlib
   - scipy
