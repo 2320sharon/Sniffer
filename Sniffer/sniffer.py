@@ -276,7 +276,6 @@ class SnifferClass(param.Parameterized):
     def change_filename(self, old_filename: str, sort_type: str, sorted_dir: str):
         """Appends sort_type to the end of the filename. Returns the location of the file in the sorted_dir"""
         new_filename = os.path.splitext(old_filename)
-        print(f"new_filename: {new_filename}")
         new_filename = new_filename[0] + "_" + str(sort_type) + new_filename[1]
         new_photo_loc = sorted_dir + os.sep + new_filename
         return new_photo_loc
