@@ -1,4 +1,5 @@
 import os
+import csv
 import pandas as pd
 from Sniffer import sniffer
 import glob
@@ -39,13 +40,12 @@ def test_delete_filename_from_csv_invalid_csv_file(get_temp_empty_csv_dir):
     sniffer_app = sniffer.SnifferClass()
     sniffer_app.delete_filename_from_csv("fakefile.jpg", "fake_location")
 
+
 def test_create_thumbnails(get_temp_thumbnails_images_dir, get_temp_populated_images_dir):
     """Verify thumnails get created for in the images directory"""
     sniffer_app = sniffer.SnifferClass()
     sniffer_app.thumbnails_path =str( get_temp_thumbnails_images_dir)
-    print(f"sniffer_app.thumbnails_path: {sniffer_app.thumbnails_path}")
     images_list = glob.glob1(get_temp_populated_images_dir + os.sep, "*jpg")
-    print(f"images_list {images_list}")
     sniffer_app.create_thumbnails(str(get_temp_populated_images_dir),images_list)
     for photo in images_list:
         expected_thumbnail=sniffer_app.thumbnails_path+os.sep+photo
@@ -56,9 +56,7 @@ def test_create_thumbnails_dir_not_exist(get_temp_populated_images_dir):
     """Verify thumbnails get created for in the images directory when the thumbanils dir doesn't exist"""
     sniffer_app = sniffer.SnifferClass()
     sniffer_app.thumbnails_path =str(os.getcwd()+os.sep+"tmpthumbnail")
-    print(f"sniffer_app.thumbnails_path: {sniffer_app.thumbnails_path}")
     images_list = glob.glob1(get_temp_populated_images_dir + os.sep, "*jpg")
-    print(f"images_list {images_list}")
     sniffer_app.create_thumbnails(str(get_temp_populated_images_dir),images_list)
     for photo in images_list:
         expected_thumbnail=sniffer_app.thumbnails_path+os.sep+photo
@@ -66,7 +64,6 @@ def test_create_thumbnails_dir_not_exist(get_temp_populated_images_dir):
     # Remove the directories once we are done testing
     if os.path.exists(sniffer_app.thumbnails_path):
           for file in glob.glob(sniffer_app.thumbnails_path + os.sep + "*jpg"):
-                print(f"file: {file}")
                 os.remove(file)
           os.rmdir(sniffer_app.thumbnails_path)
     
@@ -83,17 +80,17 @@ def test_delete_filename_from_csv(get_temp_csv):
     assert df.iloc[0]['Filename'] == 'testfile2.jpg'
 
 
-def test_find_image(get_temp_images_dir):
+def test_find_image(get_temp_images_mixed_exts_dir):
     sniffer_app = sniffer.SnifferClass()
     # Verify that find_image will not raise an error when the file doesn't exist
-    assert sniffer_app.find_image(get_temp_images_dir, "fake.jpg") is None
+    assert sniffer_app.find_image(get_temp_images_mixed_exts_dir, "fake.jpg") is None
     # Verify that find_image will not raise an error when the file doesn't exist
-    assert sniffer_app.find_image(get_temp_images_dir, "fake") is None
+    assert sniffer_app.find_image(get_temp_images_mixed_exts_dir, "fake") is None
     # Verify that find_image will not raise an error when the file_path doesn't exist
     sniffer_app.find_image("fakedir", "fake")
     # Verify that find_image will return the correct location when the image does exist
-    expected_output = get_temp_images_dir + os.sep + "img1.JPG"
-    result = sniffer_app.find_image(get_temp_images_dir, "img1.JPG")
+    expected_output = get_temp_images_mixed_exts_dir + os.sep + "img1.JPG"
+    result = sniffer_app.find_image(get_temp_images_mixed_exts_dir, "img1.JPG")
     assert expected_output == result
     
 
@@ -185,6 +182,94 @@ def test_save_sorted_image_good_dir_not_exist(get_temp_valid_images_dir):
     if os.path.exists(good_path):
           os.remove(actual_photo_loc)
           os.rmdir(good_path)
+
+def setup_handle_csv_choice(images_path, images_list, csv_file_location):
+    sniffer_app = sniffer.SnifferClass()
+    sniffer_app.images_path = str(images_path)
+    sniffer_app.images_list= images_list
+    sniffer_app.csv_file_location=csv_file_location
+    sniffer_app.last_index_images_list = len(sniffer_app.images_list) - 1
+    return sniffer_app
+
+def test_handle_csv_choice_good( get_temp_populated_images_dir, get_temp_empty_csv_file ):
+    """Verify quality control failure is triggered when empty photo_list =[]"""
+    images_list = glob.glob1(get_temp_populated_images_dir + os.sep, "*jpg")
+    sniffer_app=setup_handle_csv_choice(get_temp_populated_images_dir, images_list,get_temp_empty_csv_file )
+    initial_index=0
+    sniffer_app.image_index=initial_index
+    sort_type="good"
+    sniffer_app.handle_csv_choice(sort_type)
+    # Assert all the buttons are enabled since the 0<=index <= last_index
+    assert sniffer_app.yes_button.disabled == False
+    assert sniffer_app.no_button.disabled == False
+    assert sniffer_app.undo_button.disabled == False   
+    assert sniffer_app.image_index==initial_index+1
+    # Assert the image is in the csv file
+    new_jpg_name=os.path.splitext(images_list[initial_index])[0] + ".jpg"
+    dataframe=pd.read_csv(sniffer_app.csv_file_location)
+    assert  new_jpg_name in dataframe['Filename'].values
+    
+def test_handle_csv_choice_good_last_index( get_temp_populated_images_dir, get_temp_empty_csv_file ):
+    """Verify quality control failure is triggered when empty photo_list =[]"""
+    images_list = glob.glob1(get_temp_populated_images_dir + os.sep, "*jpg")
+    sniffer_app=setup_handle_csv_choice(get_temp_populated_images_dir, images_list,get_temp_empty_csv_file )
+    initial_index=sniffer_app.last_index_images_list
+    sniffer_app.image_index=initial_index
+    sort_type="good"
+    sniffer_app.handle_csv_choice(sort_type)
+    # Assert undo button  enabled, yes & no buttons disabled, since the 0<=index <= last_index
+    assert sniffer_app.yes_button.disabled == True
+    assert sniffer_app.no_button.disabled == True
+    assert sniffer_app.undo_button.disabled == False   
+    assert sniffer_app.image_index==initial_index+1
+    # Assert the image is in the csv file
+    new_jpg_name=os.path.splitext(images_list[initial_index])[0] + ".jpg"
+    dataframe=pd.read_csv(sniffer_app.csv_file_location)
+    index = dataframe.loc[dataframe["Filename"] == new_jpg_name].index.values
+    assert  new_jpg_name in dataframe['Filename'].values
+    assert dataframe["Sorted"].iloc[index].values[0] == sort_type
+    
+    
+def test_handle_csv_choice_bad( get_temp_populated_images_dir, get_temp_empty_csv_file ):
+    """Verify quality control failure is triggered when empty photo_list =[]"""
+    images_list = glob.glob1(get_temp_populated_images_dir + os.sep, "*jpg")
+    sniffer_app=setup_handle_csv_choice(get_temp_populated_images_dir, images_list,get_temp_empty_csv_file )
+    initial_index=0
+    sniffer_app.image_index=initial_index
+    sort_type="bad"
+    sniffer_app.handle_csv_choice(sort_type)
+    # Assert all the buttons are enabled since the 0<=index <= last_index
+    assert sniffer_app.yes_button.disabled == False
+    assert sniffer_app.no_button.disabled == False
+    assert sniffer_app.undo_button.disabled == False   
+    assert sniffer_app.image_index==initial_index+1
+    # Assert the image is in the csv file
+    new_jpg_name=os.path.splitext(images_list[initial_index])[0] + ".jpg"
+    dataframe=pd.read_csv(sniffer_app.csv_file_location)
+    index = dataframe.loc[dataframe["Filename"] == new_jpg_name].index.values
+    assert  new_jpg_name in dataframe['Filename'].values
+    assert dataframe["Sorted"].iloc[index].values[0] == sort_type
+    
+def test_handle_csv_choice_bad_last_index( get_temp_populated_images_dir, get_temp_empty_csv_file ):
+    """Verify quality control failure is triggered when empty photo_list =[]"""
+    images_list = glob.glob1(get_temp_populated_images_dir + os.sep, "*jpg")
+    sniffer_app=setup_handle_csv_choice(get_temp_populated_images_dir, images_list,get_temp_empty_csv_file )
+    initial_index=sniffer_app.last_index_images_list
+    sniffer_app.image_index=initial_index
+    sort_type="bad"
+    sniffer_app.handle_csv_choice(sort_type)
+    # Assert undo button  enabled, yes & no buttons disabled, since the 0<=index <= last_index
+    assert sniffer_app.yes_button.disabled == True
+    assert sniffer_app.no_button.disabled == True
+    assert sniffer_app.undo_button.disabled == False   
+    assert sniffer_app.image_index==initial_index+1
+    # Assert the image is in the csv file
+    new_jpg_name=os.path.splitext(images_list[initial_index])[0] + ".jpg"
+    dataframe=pd.read_csv(sniffer_app.csv_file_location)
+    index = dataframe.loc[dataframe["Filename"] == new_jpg_name].index.values
+    assert  new_jpg_name in dataframe['Filename'].values
+    assert dataframe["Sorted"].iloc[index].values[0] == sort_type
+
     
 def setup_handle_file_choice(bad_images_path,good_images_path,images_path,images_list):
     sniffer_app = sniffer.SnifferClass()
@@ -291,13 +376,13 @@ def test_handle_file_choice_bad_input():
     assert sniffer_app.undo_button.disabled == True
     
        
-def test_replace_ext(get_temp_images_dir):
+def test_replace_ext(get_temp_images_mixed_exts_dir):
     # Verify the extensions .JPG .jpeg get replaced by jpg
     sniffer_app = sniffer.SnifferClass()
     old_ext = ["JPG", "jpeg"]
     new_ext = ".jpg"
-    sniffer_app.replace_ext(old_ext, new_ext, images_path=get_temp_images_dir)
-    for file in os.listdir(get_temp_images_dir):
+    sniffer_app.replace_ext(old_ext, new_ext, images_path=get_temp_images_mixed_exts_dir)
+    for file in os.listdir(get_temp_images_mixed_exts_dir):
         if os.path.splitext(file)[1] != ".png":
             assert os.path.splitext(file)[1] == ".jpg"
 
@@ -316,12 +401,12 @@ def test_quality_control_bad_directory():
    result=sniffer_app.quality_control("fakedir",[],sniffer_app.bad_images_path,sniffer_app.good_images_path)
    assert result == False
 
-def test_quality_control_missing_directories(get_temp_images_dir):
+def test_quality_control_missing_directories(get_temp_images_mixed_exts_dir):
    sniffer_app = sniffer.SnifferClass()
    # Verify quality_control creates good and bad directories when they don't exist
    good_path=os.getcwd() + os.sep +"tmpgood"
    bad_path=os.getcwd()+os.sep+"tmpbad"
-   result=sniffer_app.quality_control(get_temp_images_dir,[4,5],bad_path,good_path)
+   result=sniffer_app.quality_control(get_temp_images_mixed_exts_dir,[4,5],bad_path,good_path)
    assert os.path.exists(good_path)
    assert os.path.exists(bad_path)
    assert result ==True
@@ -331,16 +416,16 @@ def test_quality_control_missing_directories(get_temp_images_dir):
    if os.path.exists(bad_path):
           os.rmdir(bad_path)
           
-def test_quality_control_empty_images_list(get_temp_images_dir,get_temp_bad_images_dir,get_temp_good_images_dir):
+def test_quality_control_empty_images_list(get_temp_images_mixed_exts_dir,get_temp_bad_images_dir,get_temp_good_images_dir):
    sniffer_app = sniffer.SnifferClass()
    # Verify quality_control returns False when an empty photos list is given
-   result=sniffer_app.quality_control(get_temp_images_dir,[],get_temp_bad_images_dir,get_temp_good_images_dir)
+   result=sniffer_app.quality_control(get_temp_images_mixed_exts_dir,[],get_temp_bad_images_dir,get_temp_good_images_dir)
    assert result ==False
 
-def test_quality_control_valid_inputs(get_temp_images_dir,get_temp_bad_images_dir,get_temp_good_images_dir):
+def test_quality_control_valid_inputs(get_temp_images_mixed_exts_dir,get_temp_bad_images_dir,get_temp_good_images_dir):
    sniffer_app = sniffer.SnifferClass()
    # Verify quality_control returns true for valid inputs
-   result=sniffer_app.quality_control(get_temp_images_dir,[5,4],get_temp_bad_images_dir,get_temp_good_images_dir)
+   result=sniffer_app.quality_control(get_temp_images_mixed_exts_dir,[5,4],get_temp_bad_images_dir,get_temp_good_images_dir)
    assert result ==True
        
 
