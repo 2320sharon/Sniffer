@@ -7,17 +7,14 @@ dependencies:
   - matplotlib
   - bokeh
   - jupyter_bokeh
-  # - scipy
-  - pandas
-  - scikit-image
-  - Pillow
   - jupyter_bokeh
-  # - cairo
   - psutil
+  - Pillow
   - jupyterlab
   - holoviews
   - panel
+  - pynput
+  # Dev dependencies:
   - flake8
   - pytest
   - pytest-cov
-  - pynput
