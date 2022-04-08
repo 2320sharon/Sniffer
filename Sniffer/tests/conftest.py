@@ -3,8 +3,17 @@ import shutil
 import csv
 import pandas as pd
 import os
+from Sniffer import sniffer
 
+def setup_handle_file_choice(bad_images_path,good_images_path,images_path,images_list):
+    sniffer_app = sniffer.SnifferClass()
+    sniffer_app.bad_images_path = bad_images_path
+    sniffer_app.good_images_path = good_images_path
+    sniffer_app.images_path = images_path
+    sniffer_app.images_list= images_list
+    return sniffer_app
 
+# @TODO RENAME TO MIXED FILE TYPES IMAGES
 @pytest.fixture(scope="function")
 def get_temp_images_dir(tmpdir_factory):
     test_images_dir="./Sniffer/tests/test_data/images"
