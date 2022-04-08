@@ -13,8 +13,8 @@ class SnifferClass(param.Parameterized):
     photo_index = param.Integer(0)
 
     # Widgets
-    thumbnail_button = pn.widgets.Button(name='THUMBNAIL', button_type='success', width=30,margin=(5,50))
-    image_button = pn.widgets.Button(name='IMAGE', button_type='success', width=30,margin=(5,50))
+    thumbnail_button = pn.widgets.Button(name='THUMBNAIL', button_type='success', width=30, margin=(5, 50))
+    image_button = pn.widgets.Button(name='IMAGE', button_type='success', width=30, margin=(5, 50))
     yes_button = pn.widgets.Button(name='YES', button_type='success', width=50, margin=(10, 20))
     no_button = pn.widgets.Button(name='NO', button_type='danger', width=50, margin=(10, 20))
     undo_button = pn.widgets.Button(name='UNDO', button_type='warning', width=35, margin=(10, 20))
@@ -36,13 +36,10 @@ class SnifferClass(param.Parameterized):
         self.photos_dir_location = os.getcwd() + os.sep + "images"
         # fix issues with the file extensions by converting to lowercase .jpg
         self.replace_ext(["JPG", "jpeg"], ".jpg")
-        jpg_list = glob.glob(self.photos_dir_location + os.sep + "*jpg")
-        # photos_list contains the jpgs in the images directory
-        self.photos_list = map(lambda x: os.path.basename(x), jpg_list)
-        self.photos_list = list(self.photos_list)
+        self.photos_list = glob.glob1(self.photos_dir_location, "*jpg")
         # Location of the thumbnails directory
         self.thumbnails_dir_loc = os.getcwd() + os.sep + "thumbnails"
-        self.last_index_photos_list = len(self.photos_list)-1
+        self.last_index_photos_list = len(self.photos_list) - 1
         self.good_images_path = os.getcwd() + os.sep + "good_images"
         self.bad_images_path = os.getcwd() + os.sep + "bad_images"
         # initial_photo will be the first image from the user dataset to be display in the jpg panel
@@ -94,10 +91,10 @@ class SnifferClass(param.Parameterized):
         if not os.path.exists(self.thumbnails_dir_loc):
             os.mkdir(self.thumbnails_dir_loc)
         elif os.path.exists(self.thumbnails_dir_loc):
-            # if there are any old files in the thumbnail directory delete them
+            # remove old files in thumbnail directory
             for file in os.listdir(self.thumbnails_dir_loc):
                 os.remove(os.path.join(self.thumbnails_dir_loc, file))
-        # Create a thumbnail for each photo in photos list
+        # Create thumbnails for each photo in photos list
         for photo in photos_list:
             photo_loc = photos_dir_location + os.sep + photo
             # resize the thumbnails and save them to thumbnails directory
@@ -192,9 +189,9 @@ class SnifferClass(param.Parameterized):
         """
         if not os.path.isdir(photos_dir_location):
             return False
-        if not os.path.exists(self.bad_images_path):
+        if not os.path.exists(bad_images_path):
             os.mkdir(bad_images_path)
-        if not os.path.exists(self.good_images_path):
+        if not os.path.exists(good_images_path):
             os.mkdir(good_images_path)
         if len(photos_list) == 0:
             return False
@@ -265,9 +262,9 @@ class SnifferClass(param.Parameterized):
          with the sort_type appended to the filename"""
         # Copy the images into the good or bad directories depending on the sort_type
         if "bad" in sort_type:
-            sorted_images_path = os.getcwd() + os.sep + "bad_images"
+            sorted_images_path = self.bad_images_path
         elif "good" in sort_type:
-            sorted_images_path = os.getcwd() + os.sep + "good_images"
+            sorted_images_path = self.good_images_path
         # Check if the sorted dir exists if it doesn't create it
         if not os.path.isdir(sorted_images_path):
             os.mkdir(sorted_images_path)
@@ -279,6 +276,7 @@ class SnifferClass(param.Parameterized):
     def change_filename(self, old_filename: str, sort_type: str, sorted_dir: str):
         """Appends sort_type to the end of the filename. Returns the location of the file in the sorted_dir"""
         new_filename = os.path.splitext(old_filename)
+        print(f"new_filename: {new_filename}")
         new_filename = new_filename[0] + "_" + str(sort_type) + new_filename[1]
         new_photo_loc = sorted_dir + os.sep + new_filename
         return new_photo_loc
@@ -318,7 +316,6 @@ class SnifferClass(param.Parameterized):
                 self.text.value = f'Saved image # {self.photo_index-1} / {self.last_index_photos_list} as {sort_type}'
                 self.modify_buttons_state(False)
 
-    
     def handle_csv_choice(self, sort_type: str):
         """Sorts the current file as a good or bad type in the csv file depending on the yes/no choice
            when csv mode is active
@@ -364,7 +361,7 @@ class SnifferClass(param.Parameterized):
                 thumbnail_jpgs = glob.glob(self.photos_dir_location + os.sep + "*jpg")
                 self.thumbnails_list = map(lambda x: os.path.basename(x), thumbnail_jpgs)
                 self.thumbnails_list = list(self.thumbnails_list)
-                # Complete the loading and enable all the button except IMAGE and THUMBNAIL
+                # Complete the loading and enable all buttons except IMAGE and THUMBNAIL
                 self.photo_index = 0
                 self.jpg_panel.loading = False
                 # self.thumbnail_button.disabled = True
@@ -379,8 +376,7 @@ class SnifferClass(param.Parameterized):
         if (event.obj.name == "IMAGE"):
             # Sniffer variable indicating it will display the original jpgs in the jpg panel
             self.thumbnail_mode = False
-            #self.text.value= f"IMAGE button clicked!{self.thumbnail_mode}"
-            # Enable all the button except IMAGE and THUMBNAIL
+            # Enable all the buttons except IMAGE and THUMBNAIL
             self.photo_index = 0
             self.text.value = f"IMAGE button clicked!{self.photo_index}"
             # self.thumbnail_button.disabled = True
@@ -420,7 +416,6 @@ class SnifferClass(param.Parameterized):
         elif (self.radio_group.value == "CSV Mode"):
             self.handle_csv_choice("bad")
 
-
     def handle_undo(self):
         """ Handles the undo button or hotkey """
         if self.photo_index <= 0:
@@ -429,25 +424,24 @@ class SnifferClass(param.Parameterized):
             self.undo_button.disabled = True
             self.yes_button.disabled = False
             self.no_button.disabled = False
-        elif self.photo_index > 0 and self.photo_index<= self.last_index_photos_list+1:
-            if (self.radio_group.value == "File Mode") :
-                quality_control_passed = self.quality_control(self.photos_dir_location, self.photos_list,self.bad_images_path,self.good_images_path)
+        elif self.photo_index > 0 and self.photo_index <= self.last_index_photos_list + 1:
+            if (self.radio_group.value == "File Mode"):
+                quality_control_passed = self.quality_control(
+                    self.photos_dir_location, self.photos_list, self.bad_images_path, self.good_images_path)
                 if not quality_control_passed:
                     self.quality_control_failure()
-            # Decrease the photo's index so it goes back one     
+            # Decrease the photo's index so it goes back one
             self.photo_index -= 1
             self.text.value = f'Undo last image: {self.photos_list[self.photo_index]} index: {self.photo_index}'
             if self.radio_group.value == "File Mode":
-                self.delete_image(self.photos_list[self.photo_index],self.bad_images_path,self.good_images_path)
+                self.delete_image(self.photos_list[self.photo_index], self.bad_images_path, self.good_images_path)
             elif self.radio_group.value == "CSV Mode":
-                self.delete_image(self.photos_list[self.photo_index],self.bad_images_path,self.good_images_path)
+                self.delete_image(self.photos_list[self.photo_index], self.bad_images_path, self.good_images_path)
             self.text.value = f'Undo completed image #{self.photo_index} / {self.last_index_photos_list}'
             self.modify_buttons_state(False)
 
-
     def undo_hotkey(self):
         self.handle_undo()
-
 
     def undo_button_clicked(self, event):
         if event.obj.name == "UNDO":

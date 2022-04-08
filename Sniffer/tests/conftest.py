@@ -18,6 +18,28 @@ def get_temp_images_dir(tmpdir_factory):
     return temp_dir
 
 @pytest.fixture(scope="function")
+def get_temp_populated_images_dir(tmpdir_factory):
+    test_images_dir="./Sniffer/tests/test_data/bad_images"
+    temp_dir = tmpdir_factory.mktemp("images")
+    for img in os.listdir(test_images_dir):
+        temp_dest_path=temp_dir
+        temp_dest_path = temp_dir.join(f"{img}")
+        src_path=test_images_dir+os.sep+img
+        shutil.copy(src_path,temp_dest_path)
+    return temp_dir
+
+@pytest.fixture(scope="function")
+def get_temp_thumbnails_images_dir(tmpdir_factory):
+    test_images_dir="./Sniffer/tests/test_data/good_images"
+    temp_dir = tmpdir_factory.mktemp("thumbnails")
+    for img in os.listdir(test_images_dir):
+        temp_dest_path=temp_dir
+        temp_dest_path = temp_dir.join(f"{img}")
+        src_path=test_images_dir+os.sep+img
+        shutil.copy(src_path,temp_dest_path)
+    return temp_dir
+
+@pytest.fixture(scope="function")
 def get_temp_good_images_dir(tmpdir_factory):
     test_images_dir="./Sniffer/tests/test_data/good_images"
     temp_dir = tmpdir_factory.mktemp("good_images")
@@ -26,6 +48,28 @@ def get_temp_good_images_dir(tmpdir_factory):
         temp_dest_path = temp_dir.join(f"{img}")
         src_path=test_images_dir+os.sep+img
         shutil.copy(src_path,temp_dest_path)
+    return temp_dir
+
+@pytest.fixture(scope="function")
+def get_temp_valid_images_dir(tmpdir_factory):
+    test_images_dir="./Sniffer/tests/test_data/good_images"
+    temp_dir = tmpdir_factory.mktemp("images")
+    for img in os.listdir(test_images_dir):
+        temp_dest_path=temp_dir
+        temp_dest_path = temp_dir.join(f"{img}")
+        src_path=test_images_dir+os.sep+img
+        shutil.copy(src_path,temp_dest_path)
+    return temp_dir
+
+
+@pytest.fixture(scope="function")
+def get_temp_empty_good_images_dir(tmpdir_factory):
+    temp_dir = tmpdir_factory.mktemp("good_images")
+    return temp_dir
+
+@pytest.fixture(scope="function")
+def get_temp_empty_bad_images_dir(tmpdir_factory):
+    temp_dir = tmpdir_factory.mktemp("bad_images")
     return temp_dir
 
 @pytest.fixture(scope="function")
@@ -41,7 +85,7 @@ def get_temp_bad_images_dir(tmpdir_factory):
 
 
 @pytest.fixture(scope="function")
-def get_temp_dir(tmpdir_factory):
+def get_temp_empty_csv_dir(tmpdir_factory):
     temp_dir = tmpdir_factory.mktemp("csv")
     return temp_dir
 
