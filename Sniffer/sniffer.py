@@ -13,8 +13,8 @@ class SnifferClass(param.Parameterized):
     photo_index = param.Integer(0)
 
     # Widgets
-    thumbnail_button = pn.widgets.Button(name='THUMBNAIL', button_type='success', width=50, margin=(10, 20))
-    image_button = pn.widgets.Button(name='IMAGE', button_type='success', width=50, margin=(10, 20))
+    thumbnail_button = pn.widgets.Button(name='THUMBNAIL', button_type='success', width=30,margin=(5,50))
+    image_button = pn.widgets.Button(name='IMAGE', button_type='success', width=30,margin=(5,50))
     yes_button = pn.widgets.Button(name='YES', button_type='success', width=50, margin=(10, 20))
     no_button = pn.widgets.Button(name='NO', button_type='danger', width=50, margin=(10, 20))
     undo_button = pn.widgets.Button(name='UNDO', button_type='warning', width=35, margin=(10, 20))
@@ -42,8 +42,7 @@ class SnifferClass(param.Parameterized):
         self.photos_list = list(self.photos_list)
         # Location of the thumbnails directory
         self.thumbnails_dir_loc = os.getcwd() + os.sep + "thumbnails"
-
-        self.last_index_photos_list = len(self.photos_list) - 1
+        self.last_index_photos_list = len(self.photos_list)-1
         self.good_images_path = os.getcwd() + os.sep + "good_images"
         self.bad_images_path = os.getcwd() + os.sep + "bad_images"
         # initial_photo will be the first image from the user dataset to be display in the jpg panel
@@ -129,7 +128,6 @@ class SnifferClass(param.Parameterized):
         elif self.photo_index <= self.last_index_photos_list:
             self.jpg_panel.loading = False
             self.undo_button.disabled = False
-
             if self.thumbnail_mode:
                 new_photo = self.thumbnails_dir_loc + os.sep + self.thumbnails_list[self.photo_index]
             elif self.thumbnail_mode == False:
@@ -320,6 +318,7 @@ class SnifferClass(param.Parameterized):
                 self.text.value = f'Saved image # {self.photo_index-1} / {self.last_index_photos_list} as {sort_type}'
                 self.modify_buttons_state(False)
 
+    
     def handle_csv_choice(self, sort_type: str):
         """Sorts the current file as a good or bad type in the csv file depending on the yes/no choice
            when csv mode is active
@@ -368,13 +367,13 @@ class SnifferClass(param.Parameterized):
                 # Complete the loading and enable all the button except IMAGE and THUMBNAIL
                 self.photo_index = 0
                 self.jpg_panel.loading = False
-                self.thumbnail_button.disabled = True
-                self.image_button.disabled = True
+                # self.thumbnail_button.disabled = True
+                # self.image_button.disabled = True
                 self.modify_buttons_state(False)
                 self.text.value = "Click YES or NO to begin!"
                 # Hide the thumbnail and image buttons
-                self.thumbnail_button.visible = False
-                self.image_button.visible = False
+                # self.thumbnail_button.visible = False
+                # self.image_button.visible = False
 
     def image_button_clicked(self, event):
         if (event.obj.name == "IMAGE"):
@@ -384,10 +383,10 @@ class SnifferClass(param.Parameterized):
             # Enable all the button except IMAGE and THUMBNAIL
             self.photo_index = 0
             self.text.value = f"IMAGE button clicked!{self.photo_index}"
-            self.thumbnail_button.disabled = True
-            self.image_button.disabled = True
-            self.thumbnail_button.visible = False
-            self.image_button.visible = False
+            # self.thumbnail_button.disabled = True
+            # self.image_button.disabled = True
+            # self.thumbnail_button.visible = False
+            # self.image_button.visible = False
             self.modify_buttons_state(False)
             self.text.value = f"Click YES or NO to begin!{self.photo_index}"
 
@@ -421,95 +420,41 @@ class SnifferClass(param.Parameterized):
         elif (self.radio_group.value == "CSV Mode"):
             self.handle_csv_choice("bad")
 
-    def undo_hotkey(self):
-        if not self.photo_index < 0:
-            if(self.radio_group.value == "File Mode"):
-                quality_control_passed = self.quality_control(
-                    self.photos_dir_location, self.photos_list, self.bad_images_path, self.good_images_path)
+
+    def handle_undo(self):
+        """ Handles the undo button or hotkey """
+        if self.photo_index <= 0:
+            self.photo_index = 0
+            self.text.value = f'Cannot undo image. None Left'
+            self.undo_button.disabled = True
+            self.yes_button.disabled = False
+            self.no_button.disabled = False
+        elif self.photo_index > 0 and self.photo_index<= self.last_index_photos_list+1:
+            if (self.radio_group.value == "File Mode") :
+                quality_control_passed = self.quality_control(self.photos_dir_location, self.photos_list,self.bad_images_path,self.good_images_path)
                 if not quality_control_passed:
                     self.quality_control_failure()
-                    self.modify_buttons_state(True)
-                    self.text.value = f'Undo last image #{self.photo_index}'
-                if self.photo_index == 0 or self.photo_index < 0:
-                    self.photo_index = 0
-                    self.text.value = f'Cannot undo image. None Left'
-                    self.undo_button.disabled = True
-                    self.yes_button.disabled = False
-                    self.no_button.disabled = False
-                else:
-                    # Decrease the photo's index so it goes back one
-                    self.photo_index -= 1
-                    self.text.value = f'Undo last image: {self.photos_list[self.photo_index]} index: {self.photo_index}'
-                    # Delete the old file from good or bad directory
-                    self.delete_image(self.photos_list[self.photo_index], self.bad_images_path, self.good_images_path)
-                    # Update the jpg panel
-                    new_photo = self.photos_dir_location + os.sep + self.photos_list[self.photo_index]
-                    self.jpg_panel.object = new_photo
-                    self.text.value = f'Undo completed image #{self.photo_index}'
-                    self.modify_buttons_state(False)
-            elif(self.radio_group.value == "CSV Mode"):
-                if self.photo_index == 0 or self.photo_index < 0:
-                    self.photo_index = 0
-                    self.text.value = f'Cannot undo image. None Left'
-                    self.undo_button.disabled = True
-                    self.yes_button.disabled = False
-                    self.no_button.disabled = False
-                else:
-                    # Decrease the photo's index so it goes back one
-                    self.photo_index -= 1
-                    self.text.value = f'Undo last image: {self.photos_list[self.photo_index]} index: {self.photo_index}'
-                    # Delete the old file from csv
-                    self.delete_filename_from_csv(self.photos_list[self.photo_index], self.csv_file_location)
-                    # Update the jpg panel
-                    new_photo = self.photos_dir_location + os.sep + self.photos_list[self.photo_index]
-                    self.jpg_panel.object = new_photo
-                    self.text.value = f'Undo completed image #{self.photo_index}'
-                    self.modify_buttons_state(False)
+            # Decrease the photo's index so it goes back one     
+            self.photo_index -= 1
+            self.text.value = f'Undo last image: {self.photos_list[self.photo_index]} index: {self.photo_index}'
+            if self.radio_group.value == "File Mode":
+                self.delete_image(self.photos_list[self.photo_index],self.bad_images_path,self.good_images_path)
+            elif self.radio_group.value == "CSV Mode":
+                self.delete_image(self.photos_list[self.photo_index],self.bad_images_path,self.good_images_path)
+            self.text.value = f'Undo completed image #{self.photo_index} / {self.last_index_photos_list}'
+            self.modify_buttons_state(False)
+
+
+    def undo_hotkey(self):
+        self.handle_undo()
+
 
     def undo_button_clicked(self, event):
-        if(event.obj.name == "UNDO" and self.radio_group.value == "File Mode"):
-            quality_control_passed = self.quality_control(self.photos_dir_location, self.photos_list)
-            if not quality_control_passed:
-                self.quality_control_failure()
-                self.modify_buttons_state(True)
-                self.text.value = f'Undo last image #{self.photo_index} / {self.last_index_photos_list}'
-            if self.photo_index == 0 or self.photo_index < 0:
-                self.photo_index = 0
-                self.text.value = f'Cannot undo image. None Left'
-                self.undo_button.disabled = True
-                self.yes_button.disabled = False
-                self.no_button.disabled = False
-            else:
-                # Decrease the photo's index so it goes back one
-                self.photo_index -= 1
-                self.text.value = f'Undo last image: {self.photos_list[self.photo_index]} index: {self.photo_index}'
-                # Delete the old file from good or bad directory
-                self.delete_image(self.photos_list[self.photo_index])
-                # Update the jpg panel
-                new_photo = self.photos_dir_location + os.sep + self.photos_list[self.photo_index]
-                self.jpg_panel.object = new_photo
-                self.text.value = f'Undo completed image #{self.photo_index} / {self.last_index_photos_list}'
-                self.modify_buttons_state(False)
-        elif(self.radio_group.value == "CSV Mode"):
-            if self.photo_index == 0 or self.photo_index < 0:
-                self.photo_index = 0
-                self.text.value = f'Cannot undo image. None Left'
-                self.undo_button.disabled = True
-                self.yes_button.disabled = False
-                self.no_button.disabled = False
-            else:
-                # Decrease the photo's index so it goes back one
-                self.photo_index -= 1
-                self.text.value = f'Undo last image: {self.photos_list[self.photo_index]} index: {self.photo_index}'
-                # Delete the old file from csv
-                self.delete_filename_from_csv(self.photos_list[self.photo_index], self.csv_file_location)
-                # Update the jpg panel
-                new_photo = self.photos_dir_location + os.sep + self.photos_list[self.photo_index]
-                self.jpg_panel.object = new_photo
-                self.text.value = f'Undo completed image #{self.photo_index} / {self.last_index_photos_list}'
-                self.modify_buttons_state(False)
+        if event.obj.name == "UNDO":
+            self.handle_undo()
 
     def modify_buttons_state(self, is_clickable: bool):
+        """If given True disables all the buttons"""
         self.yes_button.disabled = is_clickable
         self.no_button.disabled = is_clickable
         self.undo_button.disabled = is_clickable
