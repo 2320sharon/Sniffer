@@ -1,0 +1,20 @@
+name: sniffer
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  - matplotlib
+  - bokeh
+  - jupyter_bokeh
+  - jupyter_bokeh
+  - psutil
+  - Pillow
+  - jupyterlab
+  - holoviews
+  - panel
+  - pynput
+  # Dev dependencies:
+  - flake8
+  - pytest
+  - pytest-cov
