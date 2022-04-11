@@ -7,7 +7,7 @@
 - Automatic testing runs all the tests in the `Sniffer\Sniffer\tests` folder and prints the output in the console.
 
 - If any of the tests fail due to changes you made in the code `Pytest` will tell you exactly what failed.
-### WARNING
+### ⚠️ WARNING ⚠️
 NOTE: Do NOT change any of the data within the `test_data` folder within `Sniffer\Sniffer\tests\test_data` it will cause tests to fail. That directory is only to be used for testing.
 ### How to Run Pytest
 ---
@@ -19,6 +19,7 @@ cd <location where you installed sniffer>
 # You should be at a location something like this  C:\Myprograms\Sniffer\
 pytest
 ```
+![sniffer_pytest_v2](https://user-images.githubusercontent.com/61564689/162839955-94d6ee07-a56e-40d9-a0c5-0422bd21f5bf.gif)
 
 To see all the output of each test use the `-s` flag to `switch on` the printed output to the console.
 
