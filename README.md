@@ -47,11 +47,17 @@ I recommend using hotkeys in the [localhost](#command-prompt-method) version of 
 <br>
 `s` = undo last action
 
-## Installation Guide 🧰
+## Installation Guide & Updating 🧰
 
+### Install Sniffer 🧰
 1. `conda env create --file install/Sniffer.yml`
 2. `conda activate Sniffer`
 
+### Update Sniffer ⏫
+1. `cd <location where you installed Sniffer>`
+2. `cd install`
+3. `conda activate sniffer`
+4. `conda env update --file sniffer.yml --prune`
 
 ## Directory Structure
 ```
@@ -96,7 +102,6 @@ Currently sniffer only works with images with the `.jpg` extension. Other file t
 ## :open_mouth: Updates Coming Soon :open_mouth:
 
 1. Support for `.png`s
-2. Support for `.jpeg`s
-3. Hosting :globe_with_meridians:
-4. A wiki full of examples and troubleshooting tips
+2. Hosting :globe_with_meridians:
+3. A wiki full of examples and troubleshooting tips
 
