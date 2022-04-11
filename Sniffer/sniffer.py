@@ -54,6 +54,14 @@ class SnifferClass(param.Parameterized):
         self.modify_buttons_state(True)
         self.text.value = "Click THUMBNAIL to create thumbnails for all images or IMAGE to use the original images.\
         \n WARNING: If you choose IMAGE and your images are too large switching images may take longer. "
+        self.loading_jpg = os.getcwd() + os.sep + "assets" + os.sep + "new_loading_sniffer.jpg"
+        self.jpg_panel = pn.pane.JPG(self.loading_jpg, width=450, height=450, sizing_mode='fixed', margin=(0, 25))
+        self.thumbnail_button.on_click(self.thumbnail_button_clicked)
+        self.image_button.on_click(self.image_button_clicked)
+        self.yes_button.on_click(self.yes_button_clicked)
+        self.no_button.on_click(self.no_button_clicked)
+        self.undo_button.on_click(self.undo_button_clicked)
+
 
     def replace_ext(self, old_exts: list, new_ext: str, images_path=os.getcwd() + os.sep + "images"):
         """ Converts all images of the old ext(short for extension) to the new ext(extension) in the images_path \
@@ -114,13 +122,12 @@ class SnifferClass(param.Parameterized):
         Returns:
             panel.pane.image.JPG: self.jpg_panel
         """
-        # Index = -1 mean Sniffer just loaded
-        loading_jpg = os.getcwd() + os.sep + "assets" + os.sep + "new_loading_sniffer.jpg"
+        # Index = -1 means Sniffer just loaded
         if self.image_index == -1:
-            self.jpg_panel = pn.pane.JPG(loading_jpg, width=450, height=450, sizing_mode='fixed', margin=(0, 25))
+            self.jpg_panel = pn.pane.JPG(self.loading_jpg, width=450, height=450, sizing_mode='fixed', margin=(0, 25))
         elif self.image_index == -2:
             # Index = -2 it means the THUMBNAIL button was pressed
-            self.jpg_panel = pn.pane.JPG(loading_jpg, width=450, height=450, sizing_mode='fixed', margin=(0, 25))
+            self.jpg_panel = pn.pane.JPG(self.loading_jpg, width=450, height=450, sizing_mode='fixed', margin=(0, 25))
             self.jpg_panel.loading = True
         elif self.image_index <= self.last_index_images_list:
             self.jpg_panel.loading = False
@@ -343,7 +350,7 @@ class SnifferClass(param.Parameterized):
         """ Generate thumbnails for all the jpgs in the images folder. While the thumbnails are
             being generated a loading icon is displayed and all the buttons are disabled.
         """
-        if (event.obj.name == "THUMBNAIL"):
+        if (                                                                    event.obj.name == "THUMBNAIL"):
             self.text.value = "THUMBNAIL button clicked! Creating Thumbnails."
             # Sniffer variable indicating it will display thumbnails in the jpg panel
             self.thumbnail_mode = True
@@ -353,35 +360,23 @@ class SnifferClass(param.Parameterized):
             self.jpg_panel.loading = True
             if self.image_index < 0:
                 # Create the thumbnails in the thumbnails directory
-                self.thumbnails_path = os.getcwd() + os.sep + "thumbnails"
                 self.create_thumbnails(self.images_path, self.images_list)
                 thumbnail_jpgs = glob.glob(self.images_path + os.sep + "*jpg")
                 self.thumbnails_list = map(lambda x: os.path.basename(x), thumbnail_jpgs)
                 self.thumbnails_list = list(self.thumbnails_list)
-                # Complete the loading and enable all buttons except IMAGE and THUMBNAIL
                 self.image_index = 0
                 self.jpg_panel.loading = False
-                # self.thumbnail_button.disabled = True
-                # self.image_button.disabled = True
                 self.modify_buttons_state(False)
                 self.text.value = "Click YES or NO to begin!"
-                # Hide the thumbnail and image buttons
-                # self.thumbnail_button.visible = False
-                # self.image_button.visible = False
 
     def image_button_clicked(self, event):
         if (event.obj.name == "IMAGE"):
             # Sniffer variable indicating it will display the original jpgs in the jpg panel
             self.thumbnail_mode = False
-            # Enable all the buttons except IMAGE and THUMBNAIL
             self.image_index = 0
             self.text.value = f"IMAGE button clicked!{self.image_index}"
-            # self.thumbnail_button.disabled = True
-            # self.image_button.disabled = True
-            # self.thumbnail_button.visible = False
-            # self.image_button.visible = False
             self.modify_buttons_state(False)
-            self.text.value = f"Click YES or NO to begin!{self.image_index}"
+            self.text.value = f"Click YES or NO to begin!"
 
     def yes_button_clicked(self, event):
         if (event.obj.name == "YES" and self.radio_group.value == "File Mode"):
@@ -429,10 +424,10 @@ class SnifferClass(param.Parameterized):
                     self.quality_control_failure()
             # Decrease the photo's index so it goes back one
             self.image_index -= 1
-            self.text.value = f'Undo last image: {self.images_list[self.image_index]} index: {self.image_index}'
             if self.radio_group.value == "File Mode":
                 self.delete_image(self.images_list[self.image_index], self.bad_images_path, self.good_images_path)
             elif self.radio_group.value == "CSV Mode":
+                self.delete_filename_from_csv(self.images_list[self.image_index],self.csv_file_location)
                 self.delete_image(self.images_list[self.image_index], self.bad_images_path, self.good_images_path)
             self.text.value = f'Undo completed image #{self.image_index} / {self.last_index_images_list}'
             self.modify_buttons_state(False)
