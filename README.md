@@ -35,6 +35,9 @@
 4. Copy the local host text into your browser of choice `http://localhost:5006/Sniffer`
 
 
+![sniffer_usage_example_v2](https://user-images.githubusercontent.com/61564689/162839749-748f579b-3774-4cb2-80c6-e4e44cd49f4e.gif)
+
+
 ## How to Use Hotkeys ⌨️
 I recommend using hotkeys in the [localhost](#command-prompt-method) version of Sniffer. Sometimes jupyter notebooks will create and delete cells when you type `a` and `d`. That being said hotkeys will still work in jupyter notebook.
 ### Sniffer's Hotkeys
