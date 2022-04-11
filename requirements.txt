@@ -1,0 +1,11 @@
+matplotlib
+scikit-image
+Pillow
+pynput
+psutil
+jupyterlab
+holoviews
+panel
+flake8
+pytest
+pytest-cov
