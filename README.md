@@ -95,7 +95,6 @@ I recommend using hotkeys in the [localhost](#command-prompt-method) version of 
 ## Quick Disclaimer
 Currently sniffer only works with images with the `.jpg` extension. Other file types are not supported.
 ####  Unsupported File Types
-- :x: `.jpeg` 
 - :x: `.PNG`
 
 
