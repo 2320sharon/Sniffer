@@ -275,15 +275,18 @@ class SnifferClass(param.Parameterized):
         if not os.path.isdir(sorted_images_path):
             os.mkdir(sorted_images_path)
         # Change the filename of the photo_loc
+        print(f"\n sorted_images_path : {sorted_images_path}")
         new_filename = self.change_filename(os.path.basename(photo_loc), sort_type, sorted_images_path)
         # Move the image from images into sorted_images
+
         shutil.copyfile(photo_loc, new_filename)
 
     def change_filename(self, old_filename: str, sort_type: str, sorted_dir: str):
         """Appends sort_type to the end of the filename. Returns the location of the file in the sorted_dir"""
         new_filename = os.path.splitext(old_filename)
         new_filename = new_filename[0] + "_" + str(sort_type) + new_filename[1]
-        new_photo_loc = sorted_dir + os.sep + new_filename
+        new_photo_loc = str(sorted_dir) + os.sep + new_filename
+        print(f"\n new_photo_loc: {new_photo_loc}")
         return new_photo_loc
 
     def handle_file_choice(self, sort_type: str):

@@ -11,6 +11,13 @@ from Sniffer import sniffer
 
 
 @pytest.fixture(scope="function")
+def tmp_fake_dir(tmpdir_factory):
+    """Creates temp directory that doesn't exist"""
+    temp_dir = tmpdir_factory.mktemp("images").join("fake_dir")
+    return temp_dir
+
+
+@pytest.fixture(scope="function")
 def temp_images_mixed_extensions(tmpdir_factory):
     """Creates temp images directory with .jpg .jeg and .png files"""
     test_images_dir = "./Sniffer/tests/test_data/images"
@@ -27,18 +34,6 @@ def temp_images_mixed_extensions(tmpdir_factory):
 @pytest.fixture(scope="function")
 def temp_images_from_good_images(tmpdir_factory):
     """Creates temp images directory with images from test_data/good_images """
-    test_images_dir = "./Sniffer/tests/test_data/good_images"
-    temp_dir = tmpdir_factory.mktemp("images")
-    for img in os.listdir(test_images_dir):
-        temp_dest_path = temp_dir
-        temp_dest_path = temp_dir.join(f"{img}")
-        src_path = test_images_dir + os.sep + img
-        shutil.copy(src_path, temp_dest_path)
-    return temp_dir
-
-
-@pytest.fixture(scope="function")
-def get_temp_valid_images_dir(tmpdir_factory):
     test_images_dir = "./Sniffer/tests/test_data/good_images"
     temp_dir = tmpdir_factory.mktemp("images")
     for img in os.listdir(test_images_dir):
