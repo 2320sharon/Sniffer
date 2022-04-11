@@ -62,7 +62,6 @@ class SnifferClass(param.Parameterized):
         self.no_button.on_click(self.no_button_clicked)
         self.undo_button.on_click(self.undo_button_clicked)
 
-
     def replace_ext(self, old_exts: list, new_ext: str, images_path=os.getcwd() + os.sep + "images"):
         """ Converts all images of the old ext(short for extension) to the new ext(extension) in the images_path \
 
@@ -350,7 +349,7 @@ class SnifferClass(param.Parameterized):
         """ Generate thumbnails for all the jpgs in the images folder. While the thumbnails are
             being generated a loading icon is displayed and all the buttons are disabled.
         """
-        if (                                                                    event.obj.name == "THUMBNAIL"):
+        if (event.obj.name == "THUMBNAIL"):
             self.text.value = "THUMBNAIL button clicked! Creating Thumbnails."
             # Sniffer variable indicating it will display thumbnails in the jpg panel
             self.thumbnail_mode = True
@@ -427,7 +426,7 @@ class SnifferClass(param.Parameterized):
             if self.radio_group.value == "File Mode":
                 self.delete_image(self.images_list[self.image_index], self.bad_images_path, self.good_images_path)
             elif self.radio_group.value == "CSV Mode":
-                self.delete_filename_from_csv(self.images_list[self.image_index],self.csv_file_location)
+                self.delete_filename_from_csv(self.images_list[self.image_index], self.csv_file_location)
                 self.delete_image(self.images_list[self.image_index], self.bad_images_path, self.good_images_path)
             self.text.value = f'Undo completed image #{self.image_index} / {self.last_index_images_list}'
             self.modify_buttons_state(False)
