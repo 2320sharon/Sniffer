@@ -8,8 +8,10 @@
 </br>
 "Sniff out the good and bad imagery in your dataset."
 </br>
-<img src="https://user-images.githubusercontent.com/61564689/161645555-2b59559a-68a8-47dc-b11c-24f4e9a244f6.gif" 
-     alt="Sniffer Logo" width="560" height="450">
+ <img src="https://user-images.githubusercontent.com/61564689/161645555-2b59559a-68a8-47dc-b11c-24f4e9a244f6.gif" 
+    alt="Sniffer Logo" >
+<!-- <img src="https://user-images.githubusercontent.com/61564689/161645555-2b59559a-68a8-47dc-b11c-24f4e9a244f6.gif" 
+     alt="Sniffer Logo" width="560" height="450"> -->
 </br>
 </br>
 
