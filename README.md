@@ -53,7 +53,7 @@ I recommend using hotkeys in the [localhost](#command-prompt-method) version of 
 
 ## Installation Guide & Updating 🧰
 
-### Download Sniffer
+### Download Sniffer ⏬
 1. Clone the repository
 
 `git clone --depth 1 https://github.com/Doodleverse/segmentation_gym.git`
