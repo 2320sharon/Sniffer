@@ -56,7 +56,7 @@ I recommend using hotkeys in the [localhost](#command-prompt-method) version of 
 ### Download Sniffer ⏬
 1. Clone the repository
 
-`git clone --depth 1 https://github.com/Doodleverse/segmentation_gym.git`
+`git clone --depth 1 https://github.com/2320sharon/Sniffer.git`
 
 (--depth 1 means "give me only the present code, not the whole history of git commits" - this saves disk space, and time)
 
